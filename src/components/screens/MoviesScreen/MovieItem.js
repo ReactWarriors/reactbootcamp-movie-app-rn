@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
     backgroundColor: "#fff",
-    borderStyle: "solid",
     borderRadius: 4,
+    borderStyle: "solid",
     borderColor: "black",
     borderWidth: 1
   },

@@ -27,9 +27,18 @@ class MoviesScreen extends React.Component {
     ]
   };
 
+  handleChangeSortBy = value => {
+    this.props.moviesPageStore.onChangeFilters({
+      target: {
+        name: "sort_by",
+        value
+      }
+    });
+  };
+
   render() {
     const {
-      moviesPageStore: { filters, onChangeFilters },
+      moviesPageStore: { filters },
       optionsSortBy
     } = this.props;
     return (
@@ -42,14 +51,7 @@ class MoviesScreen extends React.Component {
               value: null,
               color: "black"
             }}
-            onValueChange={value => {
-              onChangeFilters({
-                target: {
-                  name: "sort_by",
-                  value
-                }
-              });
-            }}
+            onValueChange={this.handleChangeSortBy}
             value={filters.sort_by}
             items={optionsSortBy}
             style={{ ...pickerSelectStyles }}

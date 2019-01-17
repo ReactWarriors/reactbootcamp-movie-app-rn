@@ -2,13 +2,16 @@ import React from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import { inject, observer } from "mobx-react";
 import MovieItem from "./MovieItem";
-import Filters from "./Filters";
+import { Filters } from "./Filters";
 
 @inject("moviesPageStore")
 @observer
 class MoviesScreen extends React.Component {
   componentDidMount() {
     this.props.moviesPageStore.getMovies();
+  }
+  componentWillUnmount() {
+    console.log("unmount MoviesScreen");
   }
 
   render() {
@@ -35,7 +38,6 @@ class MoviesScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 50,
     paddingHorizontal: 20,
     backgroundColor: "#fff"
   }

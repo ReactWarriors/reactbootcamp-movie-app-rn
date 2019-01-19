@@ -11,8 +11,16 @@ class Root extends React.Component {
       <Provider moviesPageStore={moviesPageStore}>
         <Router>
           <Stack key="root">
+            {/*
             <Scene key="login" component={LoginScreen} title="Login" />
-            <Scene key="movies" component={MoviesScreen} title="Movies" />
+            */}
+            <Scene
+              hideNavBar
+              initial
+              key="movies"
+              component={MoviesScreen}
+              title="Movies"
+            />
           </Stack>
         </Router>
       </Provider>

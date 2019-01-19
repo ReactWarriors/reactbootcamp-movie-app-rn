@@ -13,7 +13,6 @@ class MovieItem extends React.Component {
               item.poster_path}`
           }}
         />
-        <Text style={styles.title}>{item.title}</Text>
       </View>
     );
   }
@@ -22,18 +21,17 @@ class MovieItem extends React.Component {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
-    padding: 20,
     flex: 1,
-    backgroundColor: "#fff",
-    borderRadius: 4,
+    borderRadius: 20,
     borderStyle: "solid",
     borderColor: "black",
     borderWidth: 1
   },
   image: {
-    width: 300,
+    borderRadius: 20,
+    width: "100%",
     height: 400,
-    alignSelf: "stretch"
+    resizeMode: "cover"
   },
   title: {
     marginTop: 15

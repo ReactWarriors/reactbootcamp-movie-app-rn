@@ -21,40 +21,75 @@ class MoviesScreen extends React.Component {
     super();
 
     this.position = new Animated.ValueXY();
-
+    console.log("this.position", this.position);
     this.state = {
       currentIndex: 0
     };
-  }
 
-  componentDidMount() {
-    this.props.moviesPageStore.getMovies();
+    this.rotate = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: ["-4deg", "0deg", "4deg"],
+      extrapolate: "clamp"
+    });
+
+    this.rotateAndTranslate = {
+      transform: [
+        {
+          rotate: this.rotate
+        },
+        ...this.position.getTranslateTransform()
+      ]
+    };
+
+    this.nextCardOpacity = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [1, 0, 1],
+      extrapolate: "clamp"
+    });
+    this.nextCardScale = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [1, 0.8, 1],
+      extrapolate: "clamp"
+    });
 
     this.PanResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gesture) => {
-        this.position.setValue({ x: gesture.dx, y: gesture.dy });
+      onPanResponderMove: (event, gestureState) => {
+        if (gestureState.dx < 0) {
+          this.position.setValue({ x: gestureState.dx, y: 0 });
+        }
       },
-      onPanResponderRelease: (event, gesture) => {
-        console.log(gesture.dx);
-        if (gesture.dx < -120) {
+      onPanResponderRelease: (event, gestureState) => {
+        console.log(gestureState.dx);
+        if (gestureState.dx < -120) {
           Animated.spring(this.position, {
-            toValue: { x: -SCREEN_WIDTH - 100, y: gesture.dy }
+            toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy }
           }).start(() => {
             this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
               this.position.setValue({ x: 0, y: 0 });
             });
           });
+        } else {
+          Animated.spring(this.position, {
+            toValue: {
+              x: 0,
+              y: 0
+            }
+          }).start();
         }
       }
     });
+  }
+
+  componentDidMount() {
+    this.props.moviesPageStore.getMovies();
   }
 
   render() {
     const {
       moviesPageStore: { isLoading, movies }
     } = this.props;
-    console.log(this.state.currentIndex);
+    console.log("render", this.state.currentIndex);
     return (
       <View style={styles.container}>
         {/* 
@@ -73,7 +108,15 @@ class MoviesScreen extends React.Component {
                   <Animated.View
                     key={String(item.id)}
                     style={[
-                      { transform: this.position.getTranslateTransform() },
+                      // {
+                      //   transform: [
+                      //     // {
+                      //     //   rotate: this.rotate
+                      //     // },
+                      //     ...this.position.getTranslateTransform()
+                      //   ]
+                      // },
+                      this.rotateAndTranslate,
                       {
                         flex: 1,
                         position: "absolute",
@@ -91,13 +134,17 @@ class MoviesScreen extends React.Component {
                 return (
                   <Animated.View
                     key={String(item.id)}
-                    style={{
-                      flex: 1,
-                      position: "absolute",
-                      top: 60,
-                      left: 20,
-                      width: SCREEN_WIDTH - 40
-                    }}
+                    style={[
+                      { opacity: this.nextCardOpacity },
+                      { transform: [{ scale: this.nextCardScale }] },
+                      {
+                        flex: 1,
+                        position: "absolute",
+                        top: 60,
+                        left: 20,
+                        width: SCREEN_WIDTH - 40
+                      }
+                    ]}
                   >
                     <MovieItem item={item} />
                   </Animated.View>

@@ -23,9 +23,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     flex: 1,
     borderRadius: 20,
-    borderStyle: "solid",
-    borderColor: "black",
-    borderWidth: 1
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5
   },
   image: {
     borderRadius: 20,
